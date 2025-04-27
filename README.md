@@ -43,13 +43,13 @@ FAST_APIR/
 
 ## Step by Step to Install this project (LINUX) 👽
 
--git clone https://github.com/fuckshady/fast_apir.git
--cd fast_apir
--python3 -m venv .venv
--.venv/bin/activate
+- git clone https://github.com/fuckshady/fast_apir.git
+- cd fast_apir
+- python3 -m venv .venv
+- .venv/bin/activate
 
 Only if you have error to interpreter
--Control + Shift + P -> Python:Select Interpreter ('venv') and solve this problem 
+- Control + Shift + P -> Python:Select Interpreter ('venv') and solve this problem 
 
 and create with touch .env, and create internal variables
 
