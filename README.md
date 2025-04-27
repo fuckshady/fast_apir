@@ -14,6 +14,7 @@ It is an API designed to manage users and their associated alerts, built with Fa
 
 ## 🛠️ Project Structure
 
+--------------------------------------------
 FAST_APIR/
 ├── .github/
 │   └── workflows/
@@ -38,6 +39,7 @@ FAST_APIR/
 ├── Dockerfile
 ├── README.md
 └── requirements.txt
+-----------------------------------------------
 
 ##Step by Step to Install this project (LINUX) 👽
 
@@ -50,5 +52,7 @@ Only if you have error to interpreter
 Control + Shift + P -> Python:Select Interpreter ('venv') and solve this problem 
 
 and create with touch .env, and create internal variables
+
+Good bye and good luck.
 
 
