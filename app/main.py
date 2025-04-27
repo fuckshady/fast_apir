@@ -31,6 +31,22 @@ def list_users():
     users = [json.loads(redis.get(k)) for k in keys]
     return users
 
+@app.delete("/users/{user_id}")
+def delete_user(user_id: str):
+    user_key = f"user:{user_id}"
+    if not redis.exists(user_key):
+        raise HTTPException(status_code=404, detail="User not found")
+    redis.delete(user_key)
+    
+    alert_keys = redis.keys(f"alert:*")
+    for alert_key in alert_keys:
+        alert_data = json.loads(redis.get(alert_key))
+        if alert_data.get("user_id") == int(user_id):  
+            redis.delete(alert_key)
+
+    return {"message": f"User {user_id} deleted successfully"}
+
+
 @app.post("/alerts/")
 def create_alert(alert: Alert):
     user_key = f"user:{alert.usuario_id}"
@@ -56,22 +72,6 @@ def list_alerts():
     keys = redis.keys("alert:*")
     alerts = [json.loads(redis.get(k)) for k in keys]
     return alerts
-
-@app.delete("/users/{user_id}")
-def delete_user(user_id: str):
-    user_key = f"user:{user_id}"
-    if not redis.exists(user_key):
-        raise HTTPException(status_code=404, detail="User not found")
-    redis.delete(user_key)
-    
-    alert_keys = redis.keys(f"alert:*")
-    for alert_key in alert_keys:
-        alert_data = json.loads(redis.get(alert_key))
-        if alert_data.get("user_id") == int(user_id):  
-            redis.delete(alert_key)
-
-    return {"message": f"User {user_id} deleted successfully"}
-
 
 @app.delete("/alerts/{alert_id}")
 def delete_alert(alert_id: str):
