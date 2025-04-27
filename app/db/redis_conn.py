@@ -17,3 +17,5 @@ r = redis.Redis(
     password=redis_password,
 )
 
+def get_redis_connection():
+    return r
