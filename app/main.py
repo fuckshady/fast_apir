@@ -1,23 +1,24 @@
 from fastapi import FastAPI, HTTPException
 from app.db.redis_conn import get_redis_connection
-from app.models.User import User
-from app.models.Alert import Alert
+
+from app.models.dtos.UserDTOs import UserCreateDTO, UserResponseDTO
+from app.models.dtos.AlertDTOs import AlertCreateDTO, AlertResponseDTO
+
 import json
 
 app = FastAPI()
 
 redis = get_redis_connection()
 
-
-@app.post("/users/")
-def create_user(user: User):
-    key = f"user:{user.id}"
+@app.post("/users/", response_model=UserResponseDTO)
+def create_user(user: UserCreateDTO):
+    key = f"user:{user.user_id}"
     if redis.exists(key):
         raise HTTPException(status_code=400, detail="User already exists")
     redis.set(key, json.dumps(user.dict()))
-    return {"message": "User successfully created"}
+    return user
 
-@app.get("/users/{user_id}")
+@app.get("/users/{user_id}", response_model=UserResponseDTO)
 def get_user(user_id: str):
     key = f"user:{user_id}"
     user_data = redis.get(key)
@@ -25,7 +26,7 @@ def get_user(user_id: str):
         raise HTTPException(status_code=404, detail="User not found")
     return json.loads(user_data)
 
-@app.get("/users/")
+@app.get("/users/", response_model=list[UserResponseDTO])
 def list_users():
     keys = redis.keys("user:*")
     users = [json.loads(redis.get(k)) for k in keys]
@@ -38,7 +39,7 @@ def delete_user(user_id: str):
         raise HTTPException(status_code=404, detail="User not found")
     redis.delete(user_key)
     
-    alert_keys = redis.keys(f"alert:*")
+    alert_keys = redis.keys("alert:*")
     for alert_key in alert_keys:
         alert_data = json.loads(redis.get(alert_key))
         if alert_data.get("user_id") == int(user_id):  
@@ -46,20 +47,19 @@ def delete_user(user_id: str):
 
     return {"message": f"User {user_id} deleted successfully"}
 
-
-@app.post("/alerts/")
-def create_alert(alert: Alert):
-    user_key = f"user:{alert.usuario_id}"
+@app.post("/alerts/", response_model=AlertResponseDTO)
+def create_alert(alert: AlertCreateDTO):
+    user_key = f"user:{alert.user_id}"
     if not redis.exists(user_key):
         raise HTTPException(status_code=404, detail="Related user does not exist")
 
-    key = f"alert:{alert.id}"
+    key = f"alert:{alert.alert_id}"
     if redis.exists(key):
         raise HTTPException(status_code=400, detail="Alert already exists")
     redis.set(key, json.dumps(alert.dict()))
-    return {"message": "Alert successfully created"}
+    return alert
 
-@app.get("/alerts/{alert_id}")
+@app.get("/alerts/{alert_id}", response_model=AlertResponseDTO)
 def get_alert(alert_id: str):
     key = f"alert:{alert_id}"
     alert_data = redis.get(key)
@@ -67,7 +67,7 @@ def get_alert(alert_id: str):
         raise HTTPException(status_code=404, detail="Alert not found")
     return json.loads(alert_data)
 
-@app.get("/alerts/")
+@app.get("/alerts/", response_model=list[AlertResponseDTO])
 def list_alerts():
     keys = redis.keys("alert:*")
     alerts = [json.loads(redis.get(k)) for k in keys]

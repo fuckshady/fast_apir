@@ -1,15 +1,13 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
 from app.models.Alert import Alert
 
-# DTO create user (input)
 class UserCreateDTO(BaseModel):
-    user_id: int
-    username: str
-    email: str
-    alerts: Optional[List[Alert]] = []
+    user_id: int = Field(..., example=1)
+    username: str = Field(..., example="santi")
+    email: str = Field(..., example="santi@example.com")
+    alerts: Optional[List[Alert]] = Field(default=[], example=[])
 
-# DTO show user (output)
 class UserResponseDTO(BaseModel):
     user_id: int
     username: str

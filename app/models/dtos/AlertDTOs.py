@@ -1,13 +1,11 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-# DTO create alert (input)
 class AlertCreateDTO(BaseModel):
-    alert_id: int
-    title: str
-    description: str
-    user_id: int
+    alert_id: int = Field(..., example=101)
+    title: str = Field(..., example="Fire detected")
+    description: str = Field(..., example="Smoke was detected in building B")
+    user_id: int = Field(..., example=1)
 
-# DTO show alert (output)
 class AlertResponseDTO(BaseModel):
     alert_id: int
     title: str
