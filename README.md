@@ -41,7 +41,7 @@ FAST_APIR/
 └── requirements.txt
 -----------------------------------------------
 
-## Step by Step to Install this project (LINUX) 👽
+## 👽 Step by Step to Install this project (LINUX) 
 
 - git clone https://github.com/fuckshady/fast_apir.git
 - cd fast_apir
