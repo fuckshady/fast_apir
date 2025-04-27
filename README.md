@@ -47,6 +47,8 @@ FAST_APIR/
 - cd fast_apir
 - python3 -m venv .venv
 - .venv/bin/activate
+- pip install fastapi uvicorn redis
+- pip install python-dotenv
 
 Only if you have error to interpreter
 - Control + Shift + P -> Python:Select Interpreter ('venv') and solve this problem 
