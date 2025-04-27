@@ -4,6 +4,23 @@ from app.db.redis_conn import get_redis_connection
 from app.models.dtos.UserDTOs import UserCreateDTO, UserResponseDTO
 from app.models.dtos.AlertDTOs import AlertCreateDTO, AlertResponseDTO
 
+from fastapi import FastAPI
+
+app = FastAPI(
+    title="FAST_APIR - User and Alert Management",
+    description="API for managing users and their alerts, developed for the third term project.",
+    version="1.0.0",
+    contact={
+        "name": "fuckshady, @juanjo-villa, @keellierr",
+        "url": "https://github.com/fuckshady/fast_apir",
+        "email": "gonzalez.santiago.3255@eam.edu.co"
+    },
+    license_info={
+        "name": "MIT License",
+        "url": "https://opensource.org/licenses/MIT",
+    }
+)
+
 import json
 
 app = FastAPI()
