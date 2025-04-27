@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7.2
+    container_name: redis_server
+    command: ["redis-server", "--requirepass", "mipasswordsegura"]
+    ports:
+      - "6379:6379"
+    networks:
+      - web
+
+  fastapi:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: fastapi_app
+    environment:
+      - REDIS_HOST=redis-17356.c279.us-central1-1.gce.redns.redis-cloud.com
+      - REDIS_PORT=17356
+      - REDIS_USERNAME=default
+      - REDIS_PASSWORD=fMA8HHzaHyG6S9AGYz42rxO8al6ixGSa
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fastapi.rule=Host(`fastapi.localhost`)"
+      - "traefik.http.services.fastapi.loadbalancer.server.port=80"
+    depends_on:
+      - redis
+    networks:
+      - web
+
+  adminer:
+    image: adminer
+    container_name: adminer_app
+    ports:
+      - "8080:8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adminer.rule=Host(`adminer.localhost`)"
+      - "traefik.http.services.adminer.loadbalancer.server.port=8080"
+    networks:
+      - web
+
+  traefik:
+    image: traefik:v2.10
+    command:
+      - "--api.insecure=true"
+      - "--providers.file.filename=/etc/traefik/traefik_dynamic.yml"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "5077:80"   # Tu puerto permitido entre 5000-5100
+      - "8081:8080" # Panel de control de Traefik
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./traefik.yml:/etc/traefik/traefik.yml"
+      - "./traefik_dynamic.yml:/etc/traefik/traefik_dynamic.yml"
+    networks:
+      - web
+
+networks:
+  web:
+    driver: bridge
