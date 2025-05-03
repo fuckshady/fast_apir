@@ -32,8 +32,6 @@ services:
   adminer:
     image: adminer
     container_name: adminer_app
-    ports:
-      - "8080:8080"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.adminer.rule=Host(`adminer.localhost`)"
