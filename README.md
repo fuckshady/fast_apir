@@ -46,7 +46,7 @@ FAST_APIR/
 - git clone https://github.com/fuckshady/fast_apir.git
 - cd fast_apir
 - python3 -m venv .venv
-- .venv/bin/activate
+- source .venv/bin/activate
 - pip install fastapi uvicorn redis
 - pip install python-dotenv
 
